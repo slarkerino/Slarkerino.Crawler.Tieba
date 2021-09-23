@@ -13,6 +13,8 @@ namespace Slarkerino.Crawler.Tieba.Authors
 
         public virtual long UserId { get; protected set; }
 
+        public virtual string TiebaId { get; protected set; }
+
         public virtual string UserName { get; protected set; }
 
         public virtual string NickName { get; protected set; }

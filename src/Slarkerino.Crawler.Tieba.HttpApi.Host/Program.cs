@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Threading.Tasks;
+using DotnetSpider.Downloader;
+using DotnetSpider.Scheduler;
+using DotnetSpider.Scheduler.Component;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using Slarkerino.Crawler.Tieba.Spiders;
 
 namespace Slarkerino.Crawler.Tieba
 {
     public class Program
     {
-        public static int Main(string[] args)
+        public async static Task<int> Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
 #if DEBUG
@@ -28,6 +33,13 @@ namespace Slarkerino.Crawler.Tieba
 
             try
             {
+                var builder = DotnetSpider.Builder.CreateDefaultBuilder<CnblogsSpider>();
+                builder.UseSerilog();
+                builder.UseDownloader<HttpClientDownloader>();
+                builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
+
+                await builder.Build().RunAsync();
+
                 Log.Information("Starting Slarkerino.Crawler.Tieba.HttpApi.Host.");
                 CreateHostBuilder(args).Build().Run();
                 return 0;

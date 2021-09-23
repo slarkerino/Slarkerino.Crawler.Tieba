@@ -18,5 +18,7 @@ namespace Slarkerino.Crawler.Tieba.Threads
 
         public virtual Guid? TenantId { get; protected set; }
 
+        public virtual bool IsActive { get; protected set; }
+
     }
 }
